@@ -1,0 +1,31 @@
+#addUserForm {
+    font-weight: bolder;
+    width: 300px;
+
+}
+
+#role-selector {
+    height: 60px;
+}
+
+#right-side {
+    background: rgba(222, 234, 232, 0.18);
+
+}
+
+.list-group {
+    background: rgba(222, 234, 232, 0.18);
+    border: none;
+
+}
+
+.btn-info {
+    color: white;
+    background-color: #6ebad9;
+    border-color: #6ebad9;
+}
+
+.col-10 {
+    background: rgba(222, 234, 232, 0.18);
+}
+
