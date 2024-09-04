@@ -22,16 +22,13 @@ var fetchRoles = () => {
     });
 };
 
-
 var fetchUsers = () => {
     fetch("/rest/users").then((response) => response.json()).then((data) => {
-
         users = data;
         var temp = "";
         data.forEach((u) => {
             var roles = u.roles.map(role => role.name.replace(/ROLE_/, ""));
             roles = roles.toString().replaceAll(',', ' ');
-
 
             temp += `
                 <tr data-id="${u.id}" class="user">
@@ -45,51 +42,42 @@ var fetchUsers = () => {
                     <td><button class='delete btn btn-danger'>Delete</button></td>
                 </tr>
             `;
-
-        })
+        });
         usersTable.innerHTML = temp;
     });
 };
 
-
+function validatePassword(password) {
+    return true;
+}
 
 var showUserModal = function (user_id, type) {
-
-
     const user = users.find(u => u.id == user_id);
-
 
     if (type == 'DELETE') userModalTitle.textContent = "Delete user";
     if (type == 'EDIT') userModalTitle.textContent = "Edit user";
 
-
-
     userModalDeleteBtn.hidden = type != 'DELETE';
     userModalEditBtn.hidden = type != 'EDIT';
 
-
     userModal.querySelectorAll('.modal-body [name]').forEach((el) => {
         el.disabled = type == 'DELETE';
-    })
-
+    });
 
     Object.keys(user).forEach((key) => {
         let input = userModal.querySelector(`input[name=${key}]`);
         if (input) input.value = user[key];
-    })
+    });
 
-
-    userModal.querySelector('input[name=password]').value = "";
+    userModal.querySelector('input[name=password]').value = user.password || '';
 
     userModal.querySelector('input[name=id]').disabled = true;
-    userModal.querySelectorAll('input');
     $('#userModal').modal('show');
-}
-
+};
 
 const takeRoles = function (form) {
     return [...form.querySelector('select[name="roles"]').selectedOptions].map(option => JSON.parse(option.dataset.role));
-}
+};
 
 //                     Add user
 addUserForm.addEventListener('submit', (e) => {
@@ -98,13 +86,12 @@ addUserForm.addEventListener('submit', (e) => {
     var data = Object.fromEntries(formData.entries());
     data["roles"] = takeRoles(addUserForm);
     fetch(`/rest/users`, {
-        method: 'PUT',
+        method: 'POST',
         body: JSON.stringify(data),
         headers: {
             'Content-Type': 'application/json'
             , Accept: "application/json"
         }
-
     })
         .then(response => {
             if (response.ok) {
@@ -114,12 +101,12 @@ addUserForm.addEventListener('submit', (e) => {
                 alert("Add method problems");
             }
         })
-
+        .catch(error => console.error('Error:', error));
 });
-
 
 // delete modal
 userModalDeleteBtn.addEventListener('click', (e) => {
+    e.preventDefault();
     var user_id = userModal.querySelector('[name=id]').value;
     fetch(`/rest/users/${user_id}`, { method: 'DELETE' })
         .then(response => {
@@ -129,18 +116,25 @@ userModalDeleteBtn.addEventListener('click', (e) => {
             } else {
                 alert("Delete method problems");
             }
-        });
+        })
+        .catch(error => console.error('Error:', error));
 });
-
 
 // edit modal
 userModalEditBtn.addEventListener('click', (e) => {
-    var user_id = userModal.querySelector('[name=id]').value;
-    var formData = new FormData(userModal.querySelector('form'));
+    e.preventDefault();
+    var form = userModal.querySelector('form');
+    var passwordInput = form.querySelector('input[name=password]');
 
-    formData.append('id', user_id);
+    if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+    }
+
+    var user_id = form.querySelector('[name=id]').value;
+    var formData = new FormData(form);
     var data = Object.fromEntries(formData.entries());
-    data["roles"] = takeRoles(userModal.querySelector('form'));
+    data["roles"] = takeRoles(form);
 
     fetch(`/rest/users`, {
         method: 'PUT',
@@ -156,11 +150,9 @@ userModalEditBtn.addEventListener('click', (e) => {
             } else {
                 alert("Update method problems");
             }
-        });
+        })
+        .catch(error => console.error('Error:', error));
 });
-
-
-
 
 usersTable.addEventListener('click', (e) => {
     let user = e.target.closest('.user');
@@ -169,8 +161,7 @@ usersTable.addEventListener('click', (e) => {
 
     if (e.target.classList.contains('delete')) showUserModal(user_id, 'DELETE');
     if (e.target.classList.contains('edit')) showUserModal(user_id, 'EDIT');
-})
-
+});
 
 fetchRoles();
 fetchUsers();

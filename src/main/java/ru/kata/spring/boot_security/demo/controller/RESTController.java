@@ -58,9 +58,10 @@ public class RESTController {
 
     @PutMapping("/users")
     public ResponseEntity<User> updateUser(@RequestBody User user) {
-        userService.save(user);
+        userService.update(user);
         return new ResponseEntity<>(user, HttpStatus.ACCEPTED);
     }
+
 
     @DeleteMapping("/users/{id}")
     public ResponseEntity<User> deleteUser(@PathVariable("id") Long id) {
