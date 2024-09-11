@@ -7,10 +7,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import ru.kata.spring.boot_security.demo.controller.dto.UserDto;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
+
+import jakarta.validation.Valid;
 
 import java.util.Collection;
 
@@ -51,15 +54,16 @@ public class RESTController {
     }
 
     @PostMapping("/users")
-    public ResponseEntity<User> addNewUser(@RequestBody User user) {
-        userService.save(user);
-        return new ResponseEntity<>(user, HttpStatus.ACCEPTED);
+    public ResponseEntity<User> addNewUser(@Valid @RequestBody UserDto userDto) {
+        User savedUser = userService.save(userDto);
+        return new ResponseEntity<>(savedUser, HttpStatus.ACCEPTED);
     }
 
-    @PutMapping("/users")
-    public ResponseEntity<User> updateUser(@RequestBody User user) {
-        userService.update(user);
-        return new ResponseEntity<>(user, HttpStatus.ACCEPTED);
+    @PutMapping("/users/{id}")
+    public ResponseEntity<User> updateUser(@PathVariable("id") Long id, @Valid @RequestBody UserDto userDto) {
+        userDto.setId(id);
+        User updatedUser = userService.update(userDto);
+        return new ResponseEntity<>(updatedUser, HttpStatus.ACCEPTED);
     }
 
 

@@ -3,7 +3,7 @@ package ru.kata.spring.boot_security.demo.model;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import org.springframework.security.core.GrantedAuthority;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 
 @Entity

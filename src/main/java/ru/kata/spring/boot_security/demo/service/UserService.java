@@ -2,6 +2,7 @@ package ru.kata.spring.boot_security.demo.service;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
+import ru.kata.spring.boot_security.demo.controller.dto.UserDto;
 import ru.kata.spring.boot_security.demo.model.User;
 
 import java.util.List;
@@ -11,11 +12,11 @@ public interface UserService extends UserDetailsService {
 
     public List<User> findAll();
 
-    public void save(User user);
+    public User save(UserDto user);
 
     public void delete(Long id);
 
-    public void update(User user);
+    public User update(UserDto user);
 
     public User getByID(Long id);
 }

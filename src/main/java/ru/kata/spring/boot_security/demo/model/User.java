@@ -2,11 +2,13 @@ package ru.kata.spring.boot_security.demo.model;
 
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import jakarta.persistence.Entity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.*;
-import javax.validation.constraints.Email;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
 import java.util.Collection;
 
 @Entity
@@ -26,7 +28,7 @@ public class User implements UserDetails {
     private String lastName;
 
     @Column(name = "age")
-    private String age;
+    private Integer age;
 
     @Column(name = "password")
     private String password;
@@ -69,11 +71,11 @@ public class User implements UserDetails {
         this.lastName = lastName;
     }
 
-    public String getAge() {
+    public Integer getAge() {
         return age;
     }
 
-    public void setAge(String age) {
+    public void setAge(Integer age) {
         this.age = age;
     }
 

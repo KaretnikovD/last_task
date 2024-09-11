@@ -8,10 +8,11 @@ var getPrincipal = () => {
 
 
         principal = data;
+        // var roles = [];
         var roles = principal.roles.map(role => role.name.replace(/ROLE_/, ""));
         roles = roles.toString().replaceAll(',', ' ');
-        
-        
+
+
         var tableTemp = "";
         headerBar.innerHTML = `${principal.email} with roles: ${roles}`;
 
