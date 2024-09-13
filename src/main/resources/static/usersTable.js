@@ -151,7 +151,7 @@ userModalEditBtn.addEventListener('click', (e) => {
     })
         .then(response => {
             if (response.ok) {
-                // fetchUsers();
+                 fetchUsers();
                 $('#userModal').modal('hide');
             } else {
                 alert("Update method problems");

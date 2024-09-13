@@ -47,12 +47,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User save(UserDto userDto) {
-        User user = new User();
-        user.setAge(userDto.getAge());
-        user.setFirstName(userDto.getFirstName());
-        user.setEmail(userDto.getEmail());
-        user.setRoles(userDto.getRoles());
+    public User save(User user) {
+//        User user = new User();
+//        user.setAge(userDto.getAge());
+//        user.setFirstName(userDto.getFirstName());
+//        user.setEmail(userDto.getEmail());
+//        user.setRoles(userDto.getRoles());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
@@ -60,27 +60,23 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void delete(Long id) {
-        User user = userRepository.getById(id);
-        userRepository.delete(user);
+        userRepository.deleteById(id);
     }
+
 
     @Override
     @Transactional
-    public User update(UserDto user) {
+    public User update(User user) {
         User existingUser = userRepository.findById(user.getId()).orElseThrow(() -> new IllegalArgumentException());
-        existingUser.setFirstName(user.getFirstName());
-        existingUser.setLastName(user.getLastName());
-        existingUser.setEmail(user.getEmail());
-        existingUser.setAge(user.getAge());
-        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
-            existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
+        if (user.getPassword() == null || user.getPassword().isEmpty()) {
+            user.setPassword(existingUser.getPassword());
+        } else {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
-        return userRepository.save(existingUser);
-
+        return userRepository.save(user);
     }
-
-    @Override
-    public User getByID(Long id) {
-        return userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException());
+        @Override
+        public User getByID (Long id){
+            return userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException());
+        }
     }
-}

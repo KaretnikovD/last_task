@@ -12,11 +12,11 @@ public interface UserService extends UserDetailsService {
 
     public List<User> findAll();
 
-    public User save(UserDto user);
+    public User save(User user);
 
     public void delete(Long id);
 
-    public User update(UserDto user);
+    public User update(User user);
 
     public User getByID(Long id);
 }
